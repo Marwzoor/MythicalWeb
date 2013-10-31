@@ -2,9 +2,9 @@ package net.daedwin.mythicalweb;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +12,9 @@ import net.daedwin.mythicalrpg.mythplayer.MythPlayer;
 import net.daedwin.mythicalrpg.mythplayer.PlayerManager;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Player;*/
+
+import org.bukkit.Bukkit;
 
 public class Connection extends Thread
 {
@@ -46,14 +48,37 @@ public class Connection extends Thread
 		    	con.close();
 		    	return;
 		    }
+		    
+		    path = path.replace(" ", "");
+		    
+		    WebConnectionEvent wce = new WebConnectionEvent(con, path);
+		    
+		    Bukkit.getPluginManager().callEvent(wce);
+		    
+		    if(wce.isCancelled())
+		    {
+		    	con.close();
+		    	return;
+		    }
 					    			
-			PrintWriter out = new PrintWriter(con.getOutputStream(), true);
+			/*PrintWriter out = new PrintWriter(con.getOutputStream(), true);
 			
 			out.println("<html>");
 			
-			path = path.replace(" ", "");
+			path = path.replace(" ", "").replaceFirst("/", "");
 			
-			if(path.contentEquals("/"))
+			Webpage wb = MythicalWeb.getWebpage(path);
+			
+			if(wb==null)
+			{
+				out.println("<html><h1>404 Page not found.</h1></html>");
+				con.close();
+				return;
+			}
+			
+			out.println(wb.getContents());
+			
+			/*if(path.contentEquals("/"))
 			{
 				out.println("<head>"
 						+ "<title>Myths of Daedwin</title>");
@@ -164,7 +189,7 @@ public class Connection extends Thread
 			
 			out.println("</div>");
 			
-			out.println("</html>");
+			out.println("</html>");*/
 			
 			con.close();
 		}

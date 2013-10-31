@@ -46,6 +46,12 @@ public class WebServer extends Thread
 				{
 					Socket con = ss.accept();
 				
+					if(MythicalWeb.isDisallowedIp(con.getInetAddress().getHostAddress()))
+					{
+						con.close();
+						continue;
+					}
+					
 					new Connection(con);
 					
 					this.buffered = System.currentTimeMillis();
